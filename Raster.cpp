@@ -1,7 +1,7 @@
 // Raster.cpp
 //
-// by Nick Paris, Feb 18, 2017
-//
+// Implementations for raster functions
+// Documentation in Raster.hpp
 //--------------------------------------------
 
 

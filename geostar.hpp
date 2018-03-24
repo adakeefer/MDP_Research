@@ -9,5 +9,6 @@
 #include "File.hpp"
 #include "Image.hpp"
 #include "Raster.hpp"
+#include "Map.hpp"
 
 #endif // GEOSTAR_HPP_

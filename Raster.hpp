@@ -1,7 +1,7 @@
 // Raster.hpp
 //
-// by Leland Pierce, Feb 18, 2017
-//
+// Header and documentation for most
+// Image processing routines in Geostar
 //----------------------------------------
 #ifndef RASTER_HPP_
 #define RASTER_HPP_
@@ -17,7 +17,6 @@
 
 //#include <opencv2/opencv.hpp>
 #include <fftw3.h>
-#include <complex>
 
 namespace GeoStar {
   class Image;

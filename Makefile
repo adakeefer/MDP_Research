@@ -31,6 +31,9 @@ Image.o: Image.cpp Image.hpp File.hpp Exceptions.hpp attributes.hpp
 Raster.o: Raster.cpp Raster.hpp RasterType.hpp Image.hpp Exceptions.hpp attributes.hpp
 	g++ -c -o Raster.o Raster.cpp ${INCL}
 
+Map.o: Map.cpp Map.hpp Exceptions.hpp
+	g++ -c -o Map.o Map.cpp ${CAIRO_INCLUDES}
+
 attributes.o: attributes.cpp attributes.hpp
 	g++ -c -o attributes.o attributes.cpp ${INCL}
 
@@ -49,8 +52,8 @@ test4: test4.cpp File.o File.hpp Image.o Image.hpp Raster.o Raster.hpp Exception
 linkerTests: linkerTests.cpp File.o File.hpp Image.o Image.hpp attributes.o attributes.hpp
 	g++ ${STD} -o linkerTests linkerTests.cpp File.o Image.o attributes.o ${INCL} ${LIBS}
 
-cairoTests: cairoTests.cpp File.o File.hpp Image.o Image.hpp Raster.o Raster.hpp attributes.o attributes.hpp
-	g++ ${STD} -o cairoTests cairoTests.cpp File.o Image.o Raster.o attributes.o ${INCL} ${LIBS}
+cairoTests: cairoTests.cpp Map.o Map.hpp 
+	g++ ${STD} -o cairoTests cairoTests.cpp Map.o ${INCL} ${LIBS}
 ## had to do:
 ## ./configure --prefix=`pwd` --with-df5=/home/lep/MDP2/codes/demo9/hdf5-1.10.0-patch1 --without-hdf4
 ## export LD_LIBRARY_PATH=/home/lep/MDP2/codes/demo9/hdf5-1.10.0-patch1/lib

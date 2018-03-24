@@ -321,6 +321,20 @@ namespace GeoStar {
               return "Integer Parameter Invalid";
           }
     };
+    class MapSizeException: public exception
+    {
+      virtual const char* what() const throw()
+          {
+              return "Invalid map size";
+          }
+    };
+    class PNGSizeException: public exception
+    {
+      virtual const char* what() const throw()
+          {
+              return "Invalid PNG size";
+          }
+    };
 
     //struct DirectoryExists{};
     //struct DirectoryDoesNotExist{};
