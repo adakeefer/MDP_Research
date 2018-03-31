@@ -48,6 +48,8 @@ namespace GeoStar {
 
 	sizeX = surfaceSizeX;
 	sizeY = surfaceSizeY;
+	mapSizeX = imageSizeX;
+	mapSizeY = imageSizeY;
         image = cairo_image_surface_create(CAIRO_FORMAT_ARGB32, 
 						surfaceSizeX, surfaceSizeY);
 
@@ -61,6 +63,9 @@ namespace GeoStar {
 	if (imageSizeY <= 0) throw PNGSizeError;
 	if (imageSizeX > sizeX) throw PNGSizeError;
 	if (imageSizeY > sizeY) throw PNGSizeError;
+	mapSizeX = imageSizeX;
+	mapSizeY = imageSizeY;
+	
 
 	cairo_t *cr = cairo_create(image);
 	cairo_surface_t *png;
@@ -75,6 +80,69 @@ namespace GeoStar {
    void Map::writePNG(const std::string &fileName) {
 	cairo_surface_write_to_png(image, fileName.c_str());
    }//end - writePNG
+
+
+  void Map::addLatLongGrid(double latTop, double longTop, 
+			double latBottom, double longBottom) {
+	cairo_t *cr = cairo_create(image);
+	cairo_set_source_rgb(cr, 0, 0, 0);
+	cairo_set_line_width(cr, 1);
+
+	cairo_select_font_face(cr, "Times New Roman", 
+	CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
+	cairo_set_font_size(cr, 10);
+
+	cairo_text_extents_t latExtents;
+	cairo_text_extents_t longExtents;
+
+	std::string coordString;
+
+	double latIncrement = (latTop - latBottom) / 5;
+	double longIncrement = (longTop - longBottom) / 5;
+
+	size_t widthIncrement = mapSizeX / 5;
+	size_t heightIncrement = mapSizeY / 5;
+	size_t mapBeginX = (sizeX - mapSizeX) / 2;
+	size_t mapBeginY = (sizeY - mapSizeY) / 2;
+	size_t tickSize = ((sizeX < sizeY) ? sizeX / 100 : sizeY / 100);
+	if (mapBeginX > tickSize) mapBeginX -= tickSize;
+	else mapBeginX -= (tickSize / 3);
+	if (mapBeginY > tickSize) mapBeginY -= tickSize;
+	else mapBeginY -= (tickSize / 3);
+
+	for (int i = 1; i < 5; ++i) {
+	 cairo_move_to(cr, mapBeginX, mapBeginY + (heightIncrement * i));
+	 cairo_line_to(cr, sizeX - mapBeginX, mapBeginY + (heightIncrement * i));
+
+	 coordString = to_string(latTop - (latIncrement * i));
+	 cairo_text_extents(cr, coordString.c_str(), &latExtents);
+	 cairo_move_to(cr, mapBeginX - latExtents.x_bearing - latExtents.width / 2, 
+			 (mapBeginY + (heightIncrement * i))
+			 - latExtents.y_bearing - latExtents.height / 2);
+	 cairo_show_text(cr, coordString.c_str());	 
+	 cairo_move_to(cr, (sizeX - mapBeginX) - latExtents.x_bearing - latExtents.width / 2, 
+			 (mapBeginY + (heightIncrement * i))
+			 - latExtents.y_bearing - latExtents.height / 2);
+	 cairo_show_text(cr, coordString.c_str());
+
+	 cairo_move_to(cr, mapBeginX + (widthIncrement * i), mapBeginY);
+	 cairo_line_to(cr, mapBeginX + (widthIncrement * i), sizeY - mapBeginY);
+
+	 coordString = to_string(longTop - (longIncrement * i));
+	 cairo_text_extents(cr, coordString.c_str(), &longExtents);
+	 cairo_move_to(cr, (mapBeginX + (widthIncrement * i)) - longExtents.x_bearing - longExtents.width / 2, 
+			 mapBeginY - longExtents.y_bearing - longExtents.height / 2);
+	 cairo_show_text(cr, coordString.c_str());	 
+	 cairo_move_to(cr, (mapBeginX + (widthIncrement * i)) - longExtents.x_bearing - longExtents.width / 2, 
+			 (sizeY - mapBeginY) - longExtents.y_bearing - longExtents.height / 2);
+	 cairo_show_text(cr, coordString.c_str());
+	
+	}//endfor - lines and labels
+
+	cairo_stroke(cr);
+	cairo_destroy(cr);
+
+  }//end - addLatLongGrid
 
    
 

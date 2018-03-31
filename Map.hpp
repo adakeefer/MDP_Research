@@ -49,10 +49,10 @@ the size of the current surface, if you are creating a pdf, and the image data i
 
 class Map {
 private:
- double lat = 0;
- double longitude = 0;
  size_t sizeX;
  size_t sizeY;
+ size_t mapSizeX;
+ size_t mapSizeY;
  std::string pdfName = "";
  cairo_surface_t *image;
 
@@ -354,6 +354,68 @@ public:
 	data will be overwritten.  
     */
    void writePNG(const std::string &fileName);
+
+/** \brief addLatLongGrid - adds a latitude and longitude grid system to the map
+
+    This function allows you to build a grid system for your map, supplying the
+	latitude and longitude coordinates of the image in decimal format (ex: 6.39023, -6.89543).
+    The grid will overlay the map, defaulted at four ticks on each side.
+
+    \see readPNG(), writePNG()
+
+    \param[in] latTop
+	The upper left hand latitude coordinate of the map
+
+    \param[in] longTop
+	The upper left hand longitude coordinate of the map
+
+    \param[in] latBottom
+	The lower right hand latitude coordinate of the map
+
+    \param[in] longBottom
+	The lower right hand longitude coordinate of the map
+
+    \returns
+	nothing
+
+    \Par Exceptions
+	none
+
+    \Par Example
+	Creating a new map with png data, then overlaying it with a lat/long grid:
+	\code
+	#include "Geostar.hpp"
+	#include <string>
+	using namespace std;
+
+	int main() {
+	GeoStar::Map *map = new GeoStar::Map("LC03_L2TP_63_T2_B1.png", 
+					942, 1024, 745, 850);
+	map->addLatLongGrid(45.4542, -87.6992, 
+				41.3869, -81.7298);
+	map->writePNG("satGrid.png");
+	delete map;
+	}
+
+	\endcode
+
+	<table>
+        <tr>
+        \imageSize{michigan.png,height:500px;width:450px;}
+        \image html michigan.png "before map processing"
+        </tr>
+        <tr>
+        \imageSize{michiganGrid.png,height:500px;width:450px;}
+        \image html michiganGrid.png "New map with lat/long grid"
+        </tr>
+        </table>
+
+    \Par Details
+
+	The grid will overlay the map, defaulted at four ticks on each side.
+    */
+   void addLatLongGrid(double latTop, double longTop, 
+			double latBottom, double longBottom);
 
    
 
